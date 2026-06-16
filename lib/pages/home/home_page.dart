@@ -45,7 +45,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeNotifier);
-    final notifier = ref.read(homeNotifier.notifier);
 
     // 同步 API Key 欄位的數值
     if (state.showApiKeyPanel) {
@@ -64,7 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             tooltip: '設定氣象局 API 金鑰',
             onPressed: () {
-              notifier.updateApiKeyPanel(!state.showApiKeyPanel);
+              ref.read(homeNotifier.notifier).updateApiKeyPanel(!state.showApiKeyPanel);
             },
           ),
         ],
@@ -77,7 +76,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               showPanel: state.showApiKeyPanel,
               controller: _apiKeyController,
               onSave: () async {
-                await notifier.updateApiKey(_apiKeyController.text);
+                await ref.read(homeNotifier.notifier).updateApiKey(_apiKeyController.text);
                 SnackBarUtils.showDefaultSnackBar(context, 'API 金鑰已更新並成功保存！');
               },
             ),
@@ -99,7 +98,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-                      notifier.searchWeather(_searchController.text);
+                      ref.read(homeNotifier.notifier).searchWeather(_searchController.text);
                     },
                     child: const Text(
                       '確認',
@@ -134,7 +133,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       refreshController: _refreshController,
                       weatherData: state.weatherData!,
                       onRefresh: () {
-                        notifier.searchWeather(_searchController.text);
+                        ref.read(homeNotifier.notifier).searchWeather(_searchController.text);
                       },
                     );
                   }
@@ -142,7 +141,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   return WeatherInitialView(
                     onCitySelected: (city) {
                       _searchController.text = city;
-                      notifier.searchWeather(city);
+                      ref.read(homeNotifier.notifier).searchWeather(city);
                     },
                   );
                 },
